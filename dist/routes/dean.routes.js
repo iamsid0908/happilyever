@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const slot_controller_1 = require("../controller/slot.controller");
+const validateResourse_1 = require("../middleware/validateResourse");
+const slot_schema_1 = require("../schema/slot.schema");
+const auth_1 = require("../middleware/auth");
+const deanRoutes = (0, express_1.Router)();
+deanRoutes.get("/getallsessions", slot_controller_1.getAllSessions);
+deanRoutes.post("/createsession", (0, validateResourse_1.validateResourse)(slot_schema_1.createSlotSchema), auth_1.verifyToken, slot_controller_1.createSession);
+deanRoutes.post("/getmysessions", auth_1.verifyToken, slot_controller_1.getMySession);
+deanRoutes.post("/getmybookedsessions", auth_1.verifyToken, slot_controller_1.getMyBookedSession);
+exports.default = deanRoutes;
