@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMyBookedSession = exports.getMySession = exports.createSession = exports.getAllSessions = void 0;
 const slot_service_1 = require("../service/slot.service");
+const currentDate_1 = require("../utils/currentDate");
 function getAllSessions(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -64,6 +65,21 @@ function getMyBookedSession(req, res) {
         try {
             const userId = req.user.id;
             const sessions = yield (0, slot_service_1.getMySessionService)(userId);
+            const currentDateTime = (0, currentDate_1.getCurrentDateTime)();
+            console.log(currentDateTime);
+            for (const slot of sessions) {
+                const slotDateTime = slot.day;
+                if (currentDateTime > slotDateTime) {
+                    // Update the activation field to true
+                    slot.activation = true;
+                    // Save the updated slot
+                    yield slot.save();
+                }
+                if (currentDateTime > slotDateTime) {
+                    console.log("hii");
+                }
+            }
+            console.log(sessions);
             const filteredSessions = sessions.filter(sessions => sessions.activation === false &&
                 sessions.booked === true);
             res.status(200).json({
@@ -71,6 +87,7 @@ function getMyBookedSession(req, res) {
             });
         }
         catch (e) {
+            res.send(e);
         }
     });
 }

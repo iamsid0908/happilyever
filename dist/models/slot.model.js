@@ -40,6 +40,9 @@ const SlotSchema = new mongoose_1.Schema({
     bookedwith: {
         type: String
     },
+    uniId: {
+        type: String
+    },
     activation: {
         type: Boolean,
         default: false

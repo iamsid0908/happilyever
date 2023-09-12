@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { createSessionService, getAllSessionsService, getMySessionService } from "../service/slot.service";
 import { CreateSlotInput } from "../schema/slot.schema";
+import { getCurrentDateTime } from "../utils/currentDate";
 
 export async function getAllSessions(req:Request,res:Response){
     try{
@@ -43,10 +44,33 @@ export async function getMySession(req:any,res:Response){
     }
 }
 
+
 export async function getMyBookedSession(req:any,res:Response) {
     try{
         const userId = req.user.id;
         const sessions = await getMySessionService(userId);
+
+        const currentDateTime = getCurrentDateTime();
+        console.log(currentDateTime)
+
+        for (const slot of sessions) {
+            const slotDateTime = slot.day;
+            
+            if (currentDateTime > slotDateTime) {
+                // Update the activation field to true
+                slot.activation = true;
+                
+                // Save the updated slot
+                await slot.save();
+              }
+              if(currentDateTime > slotDateTime){
+                console.log("hii")
+              }
+        }
+        
+        console.log(sessions)
+
+
         const filteredSessions = sessions.filter(sessions => sessions.activation === false && 
             sessions.booked === true);
 
@@ -54,6 +78,6 @@ export async function getMyBookedSession(req:any,res:Response) {
             filteredSessions
         })
     }catch(e:any){
-
+        res.send(e);
     }
 }

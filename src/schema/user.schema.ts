@@ -8,6 +8,9 @@ export const createUserSchema:any = object({
         email:string({
             required_error:"email is required"
         }),
+        uniId:string({
+            required_error:"University id is required"
+        }),
         password:string({
             required_error:"password is required"
         }),

@@ -10,6 +10,9 @@ exports.createUserSchema = (0, zod_1.object)({
         email: (0, zod_1.string)({
             required_error: "email is required"
         }),
+        uniId: (0, zod_1.string)({
+            required_error: "University id is required"
+        }),
         password: (0, zod_1.string)({
             required_error: "password is required"
         }),

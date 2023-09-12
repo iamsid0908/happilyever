@@ -45,6 +45,11 @@ const UserSchema = new mongoose_1.Schema({
         require: true,
         unique: true
     },
+    uniId: {
+        type: String,
+        require: true,
+        unique: true
+    },
     password: {
         type: String,
         require: true

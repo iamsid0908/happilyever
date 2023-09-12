@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bookaSession = exports.getAllSessionByDeanId = void 0;
+exports.bookaSession = exports.getAllDean = exports.getAllSessionByDeanId = void 0;
 const slot_service_1 = require("../service/slot.service");
 const student_service_1 = require("../service/student.service");
+const user_model_1 = __importDefault(require("../models/user.model"));
 function getAllSessionByDeanId(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -28,6 +32,22 @@ function getAllSessionByDeanId(req, res) {
     });
 }
 exports.getAllSessionByDeanId = getAllSessionByDeanId;
+function getAllDean(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const user = yield user_model_1.default.find({});
+            const filteredSessions = user.filter(user => user.role !== "student");
+            console.log(filteredSessions);
+            res.status(200).json({
+                filteredSessions
+            });
+        }
+        catch (e) {
+            res.send(e);
+        }
+    });
+}
+exports.getAllDean = getAllDean;
 function bookaSession(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -43,6 +63,7 @@ function bookaSession(req, res) {
             if (session && session.booked !== undefined) {
                 session.booked = true;
                 session.bookedwith = user === null || user === void 0 ? void 0 : user.name;
+                session.uniId = user === null || user === void 0 ? void 0 : user.uniId;
             }
             yield (session === null || session === void 0 ? void 0 : session.save());
             res.status(200).json({

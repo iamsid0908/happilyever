@@ -6,6 +6,7 @@ const bcrypt=require("bcrypt")
 export interface IUser extends Document {
     name: string;
     email: string;
+    uniId: string
     password: string;
     role:string
   }
@@ -21,6 +22,11 @@ const UserSchema:Schema = new Schema({
         require:true,
         unique:true
         },
+    uniId:{
+        type:String,
+        require:true,
+        unique:true
+    },    
     password:{
         type:String,
         require:true
